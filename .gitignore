@@ -417,3 +417,4 @@ dist-ssr
 *.sln
 *.sw?
 /.idea/
+/.env
