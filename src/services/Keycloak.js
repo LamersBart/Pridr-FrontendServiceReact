@@ -1,10 +1,9 @@
 import Keycloak from 'keycloak-js';
 
 const _kc = new Keycloak({
-    url: "http://localhost:8080",
-    clientId: "Frontend",
-    realm: "pridr",
-    KeycloakResponseType: 'code',
+    url: import.meta.env.VITE_KEYCLOAK_URL,
+    clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
+    realm: import.meta.env.VITE_KEYCLOAK_REALM,
 });
 
 /**
@@ -18,6 +17,7 @@ const initKeycloak = (onAuthenticatedCallback) => {
         silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
         checkLoginIframe: false,
         pkceMethod: 'S256',
+        KeycloakResponseType: 'code'
     })
         .then((authenticated) => {
             if (!authenticated) {
