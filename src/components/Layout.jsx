@@ -4,13 +4,17 @@ import Footer from "./Footer.jsx";
 const Layout = ({ children }) => {
     return (
         <>
-            <AppAppBar/>
+            <header>
+                <AppAppBar/>
+            </header>
             <main>
                 {children}
             </main>
-            {/*<Footer/> */}
+            <footer>
+                <Footer/>
+            </footer>
         </>
-        )
+    )
 };
 
 export default Layout

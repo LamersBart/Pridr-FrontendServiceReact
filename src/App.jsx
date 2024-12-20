@@ -9,19 +9,19 @@ import {CssBaseline} from "@mui/material";
 import AppTheme from "./shared-theme/AppTheme.jsx";
 
 const App = () => (
-    <BrowserRouter>
-        <AppTheme>
-            <CssBaseline enableColorScheme />
-            <Layout>
-                <RenderOnAnonymous>
-                    <Landing/>
-                </RenderOnAnonymous>
-                <RenderOnAuthenticated>
-                    <Home/>
-                </RenderOnAuthenticated>
-            </Layout>
-        </AppTheme>
-    </BrowserRouter>
+    <AppTheme>
+        <CssBaseline enableColorScheme />
+        <Layout>
+            <BrowserRouter>
+            <RenderOnAnonymous>
+                <Landing/>
+            </RenderOnAnonymous>
+            <RenderOnAuthenticated>
+                <Home/>
+            </RenderOnAuthenticated>
+            </BrowserRouter>
+        </Layout>
+    </AppTheme>
 );
 
 export default App

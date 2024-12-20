@@ -65,9 +65,9 @@ export default function AppAppBar() {
             >
                 <Container maxWidth="lg">
                     <StyledToolbar variant="dense" disableGutters>
-                        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-                            <img style={{margin: -15}} src={pridrLogo} className="logo Pridr" alt="Pridr logo"/>
-                            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                        <Box sx={{flexGrow: 1, display: 'flex', alignItems: 'center', px: 0}}>
+                            <img style={{height: '2.8em', marginTop: 5}} src={pridrLogo} className="logo Pridr" alt="Pridr logo"/>
+                            <Box sx={{display: {xs: 'none', md: 'flex'}}}>
                                 <Button variant="text" color="info" size="small">
                                     Profiles
                                 </Button>
@@ -149,7 +149,7 @@ export default function AppAppBar() {
                 <Container maxWidth="md">
                     <StyledToolbar variant="dense" disableGutters>
                         <Box sx={{flexGrow: 0, display: 'fixed', alignItems: 'center', px: 0}}>
-                            <img style={{margin: -15}} src={pridrLogo} className="logo Pridr" alt="Pridr logo"/>
+                            <img style={{height: '2.8em', marginTop: 5}} src={pridrLogo} className="logo Pridr" alt="Pridr logo"/>
                         </Box>
                         <Box
                             sx={{

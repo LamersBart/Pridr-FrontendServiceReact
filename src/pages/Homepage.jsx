@@ -21,8 +21,9 @@ const Home = () => {
         <>
             <h1>My Awesome React App</h1>
             <h1>Secured with Keycloak</h1>
-            <Grid container spacing={2}>
-                <Grid size={12}>
+            <Grid container spacing={2} justifyContent="center" alignItems="center">
+                <Grid item xs={12}></Grid>
+                <Grid size={10}>
                     <p style={{wordWrap: 'break-word'}}>{token}</p>
                 </Grid>
             </Grid>
