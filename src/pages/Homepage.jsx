@@ -1,11 +1,24 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import KeycloakService from "../services/Keycloak.js";
 import Grid from '@mui/material/Grid2';
 
+
 const Home = () => {
-    const token = React.useState(KeycloakService.getToken());
+    const [token, setToken] = useState('');
+    useEffect(() => {
+        // Retrieve the token when the component mounts
+        const fetchToken = async () => {
+            try {
+                const currentToken = KeycloakService.getToken();
+                setToken(currentToken); // Set the token to the state
+            } catch (error) {
+                console.error('Failed to fetch Keycloak token:', error);
+            }
+        };
+        fetchToken();
+    }, []); // Empty dependency array ensures this effect runs once on mount
     return (
-        <div id="keycloak">
+        <>
             <h1>My Awesome React App</h1>
             <h1>Secured with Keycloak</h1>
             <Grid container spacing={2}>
@@ -13,12 +26,7 @@ const Home = () => {
                     <p style={{wordWrap: 'break-word'}}>{token}</p>
                 </Grid>
             </Grid>
-            <button onClick={() => {
-                KeycloakService.doLogout()
-            }} className='m-1'>
-                Logout
-            </button>
-        </div>
+        </>
     );
 };
 

@@ -1,4 +1,4 @@
-import KeycloakService from "./services/Keycloak.js";
+import KeycloakService from "../services/Keycloak.js";
 
 const RenderOnAnonymous = ({ children }) => (!KeycloakService.isLoggedIn()) ? children : null;
 

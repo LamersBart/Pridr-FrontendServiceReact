@@ -1,20 +1,26 @@
 import { BrowserRouter } from "react-router-dom";
 import Home from "./pages/Homepage";
 import Landing from "./pages/Landingpage";
-import RenderOnAnonymous from "./RenderOnAnonymous";
-import RenderOnAuthenticated from "./RenderOnAuthenticated";
+import RenderOnAnonymous from "./components/RenderOnAnonymous.jsx";
+import RenderOnAuthenticated from "./components/RenderOnAuthenticated.jsx";
+import Layout from "./components/Layout.jsx";
 import './App.css'
+import {CssBaseline} from "@mui/material";
+import AppTheme from "./shared-theme/AppTheme.jsx";
 
 const App = () => (
     <BrowserRouter>
-        <div className="container">
-            <RenderOnAnonymous>
-                <Landing/>
-            </RenderOnAnonymous>
-            <RenderOnAuthenticated>
-                <Home/>
-            </RenderOnAuthenticated>
-        </div>
+        <AppTheme>
+            <CssBaseline enableColorScheme />
+            <Layout>
+                <RenderOnAnonymous>
+                    <Landing/>
+                </RenderOnAnonymous>
+                <RenderOnAuthenticated>
+                    <Home/>
+                </RenderOnAuthenticated>
+            </Layout>
+        </AppTheme>
     </BrowserRouter>
 );
 
