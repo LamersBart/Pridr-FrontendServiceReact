@@ -48,6 +48,8 @@ const updateToken = (successCallback) =>
 
 const getUsername = () => _kc.tokenParsed?.preferred_username;
 
+const getKeycloakId = () => _kc.tokenParsed?.sub;
+
 const hasRole = (roles) => roles.some((role) => _kc.hasRealmRole(role));
 
 const KeycloakService = {
@@ -59,6 +61,7 @@ const KeycloakService = {
     getTokenParsed,
     updateToken,
     getUsername,
+    getKeycloakId,
     hasRole,
 };
 

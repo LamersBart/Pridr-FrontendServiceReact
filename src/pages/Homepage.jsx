@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid2';
 
 const Home = () => {
     const [token, setToken] = useState('');
+
     useEffect(() => {
         // Retrieve the token when the component mounts
         const fetchToken = async () => {
@@ -22,10 +23,11 @@ const Home = () => {
             <h1>My Awesome React App</h1>
             <h1>Secured with Keycloak</h1>
             <Grid container spacing={2} justifyContent="center" alignItems="center">
-                <Grid item xs={12}></Grid>
-                <Grid size={10}>
+                <Grid size={2}/>
+                <Grid size={8}>
                     <p style={{wordWrap: 'break-word'}}>{token}</p>
                 </Grid>
+                <Grid size={2}/>
             </Grid>
         </>
     );

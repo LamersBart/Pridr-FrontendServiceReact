@@ -8,23 +8,23 @@ const Landing = () => {
     return (
         <>
             <h1>Welcome to</h1>
-                <Grid container row spacing={2} justifyContent="center" alignItems="center">
-                    <Grid item xs={2} md={2}>
+                <Grid container spacing={2} justifyContent="center" alignItems="center">
+                    <Grid xs={2} md={2}>
                         <h1>P</h1>
                     </Grid>
-                    <Grid item xs={2} md={2}>
+                    <Grid xs={2} md={2}>
                         <h1>R</h1>
                     </Grid>
-                    <Grid item xs={2} md={2}>
+                    <Grid xs={2} md={2}>
                         <h1>I</h1>
                     </Grid>
-                    <Grid item xs={2} md={2}>
+                    <Grid xs={2} md={2}>
                         <h1>D</h1>
                     </Grid>
-                    <Grid item xs={2} md={2}>
+                    <Grid xs={2} md={2}>
                         <img style={{marginLeft: -25, marginRight: -25, marginTop: 8, padding: -8, maxHeight: '6em'}} src={pridrLogo} className="logo Pridr" alt="Pridr logo"/>
                     </Grid>
-                    <Grid item xs={2} md={2}>
+                    <Grid xs={2} md={2}>
                         <h1>R</h1>
                     </Grid>
                 </Grid>

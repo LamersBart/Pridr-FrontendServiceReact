@@ -66,7 +66,10 @@ export default function AppAppBar() {
                 <Container maxWidth="lg">
                     <StyledToolbar variant="dense" disableGutters>
                         <Box sx={{flexGrow: 1, display: 'flex', alignItems: 'center', px: 0}}>
-                            <img style={{height: '2.8em', marginTop: 5}} src={pridrLogo} className="logo Pridr" alt="Pridr logo"/>
+                            <a href="/">
+                                <img style={{height: '2.8em', marginTop: 5}} src={pridrLogo} className="logo Pridr"
+                                     alt="Pridr logo"/>
+                            </a>
                             <Box sx={{display: {xs: 'none', md: 'flex'}}}>
                                 <Button variant="text" color="info" size="small">
                                     Profiles
@@ -74,7 +77,7 @@ export default function AppAppBar() {
                                 <Button variant="text" color="info" size="small">
                                     Events
                                 </Button>
-                                <Button variant="text" color="info" size="small">
+                                <Button href="/chat" variant="text" color="info" size="small">
                                     Chat
                                 </Button>
                             </Box>
