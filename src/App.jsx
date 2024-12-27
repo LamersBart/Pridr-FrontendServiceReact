@@ -9,6 +9,8 @@ import {CssBaseline} from "@mui/material";
 import AppTheme from "./shared-theme/AppTheme.jsx";
 import KeycloakService from "./services/Keycloak.js";
 import './App.css'
+import ProfileView from "./pages/ProfileView.jsx";
+import ChatList from "./pages/ChatList.jsx";
 
 const App = () => (
     <AppTheme>
@@ -31,7 +33,25 @@ const App = () => (
                     <Route path="/chat" element={
                         KeycloakService.isLoggedIn() ? (
                             <RenderOnAuthenticated>
+                                <ChatList />
+                            </RenderOnAuthenticated>
+                        ) : (
+                            <Navigate to="/" />
+                        )
+                    }/>
+                    <Route path="/chat/:targetUserId" element={
+                        KeycloakService.isLoggedIn() ? (
+                            <RenderOnAuthenticated>
                                 <Chat />
+                            </RenderOnAuthenticated>
+                        ) : (
+                            <Navigate to="/" />
+                        )
+                    }/>
+                    <Route path="/profile/:id" element={
+                        KeycloakService.isLoggedIn() ? (
+                            <RenderOnAuthenticated>
+                                <ProfileView />
                             </RenderOnAuthenticated>
                         ) : (
                             <Navigate to="/" />

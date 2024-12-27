@@ -15,6 +15,7 @@ import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown.jsx';
 import {useEffect, useState} from "react";
 import KeycloakService from "../services/Keycloak.js";
 import pridrLogo from '/pridr-E.png'
+import { useNavigate } from "react-router-dom";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     display: 'flex',
@@ -35,6 +36,8 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 export default function AppAppBar() {
     const [open, setOpen] = React.useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
+
     useEffect(() => {
         // Retrieve the token when the component mounts
         const fetchLoggedInStatus = async () => {
@@ -50,7 +53,15 @@ export default function AppAppBar() {
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
+    const handleLogoClick = () => {
+        // Navigeer naar de chat met dit profiel
+        navigate("/");
+    };
 
+    const handleNavigate = (path) => {
+        // Navigeer naar de chat met dit profiel
+        navigate(path);
+    };
     if(isLoggedIn){
         return (
             <AppBar
@@ -66,18 +77,16 @@ export default function AppAppBar() {
                 <Container maxWidth="lg">
                     <StyledToolbar variant="dense" disableGutters>
                         <Box sx={{flexGrow: 1, display: 'flex', alignItems: 'center', px: 0}}>
-                            <a href="/">
                                 <img style={{height: '2.8em', marginTop: 5}} src={pridrLogo} className="logo Pridr"
-                                     alt="Pridr logo"/>
-                            </a>
+                                     alt="Pridr logo"  onClick={() => handleNavigate("/")}/>
                             <Box sx={{display: {xs: 'none', md: 'flex'}}}>
-                                <Button variant="text" color="info" size="small">
+                                <Button onClick={() => handleNavigate("/")} variant="text" color="info" size="small">
                                     Profiles
                                 </Button>
                                 <Button variant="text" color="info" size="small">
                                     Events
                                 </Button>
-                                <Button href="/chat" variant="text" color="info" size="small">
+                                <Button onClick={() => handleNavigate("/chat")} variant="text" color="info" size="small">
                                     Chat
                                 </Button>
                             </Box>
@@ -152,7 +161,7 @@ export default function AppAppBar() {
                 <Container maxWidth="md">
                     <StyledToolbar variant="dense" disableGutters>
                         <Box sx={{flexGrow: 0, display: 'fixed', alignItems: 'center', px: 0}}>
-                            <img style={{height: '2.8em', marginTop: 5}} src={pridrLogo} className="logo Pridr" alt="Pridr logo"/>
+                            <img style={{height: '2.8em', marginTop: 5}} src={pridrLogo} className="logo Pridr" alt="Pridr logo" onClick={() => handleNavigate("/")}/>
                         </Box>
                         <Box
                             sx={{
