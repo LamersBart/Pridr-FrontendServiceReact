@@ -1,5 +1,4 @@
 import AppAppBar from "./AppAppBar.jsx";
-import Footer from "./Footer.jsx";
 
 const Layout = ({ children }) => {
     return (
@@ -10,9 +9,6 @@ const Layout = ({ children }) => {
             <main>
                 {children}
             </main>
-            <footer>
-                <Footer/>
-            </footer>
         </>
     )
 };

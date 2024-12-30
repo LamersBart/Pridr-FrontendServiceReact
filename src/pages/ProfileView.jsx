@@ -1,47 +1,186 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, CardContent, Typography, Button } from "@mui/material";
+import { Card, CardContent, Typography, TextField, MenuItem, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-
-const fetchProfileDetails = async (id) => {
-    // Simuleer een API-call om profielgegevens op te halen
-    if (id === "1e90c0e1-16d0-459a-8406-7f80c4772eca") {
-        return { id, name: "Alice", bio: "Loves coding!" }
-    } else {
-        return { id, name: "Bob", bio: "Hiking enthusiast!" }
-    }
-};
+import { userApi } from "../services/api.js";
 
 const ProfileView = () => {
-    const { id } = useParams(); // Haal profiel-ID uit URL
+    const { id } = useParams(); // KeyCloak ID uit de URL
     const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    // Lijst met opties voor dropdowns
+    const sexualityOptions = [
+        { value: 0, label: "Onbekend" },
+        { value: 1, label: "Gay" },
+        { value: 2, label: "Lesbian" },
+        { value: 3, label: "Bisexual" },
+        { value: 4, label: "Trans" },
+    ];
+
+    const lookingForOptions = [
+        { value: 0, label: "Friendship" },
+        { value: 1, label: "Relation" },
+        { value: 2, label: "Fun" },
+    ];
+
+    const relationStatusOptions = [
+        { value: 0, label: "Onbekend" },
+        { value: 1, label: "Single" },
+        { value: 2, label: "Committed" },
+        { value: 3, label: "Open relation" },
+        { value: 4, label: "Engaged" },
+        { value: 5, label: "Married" },
+    ];
+
+    // Laad huidige profielgegevens
     useEffect(() => {
         const loadProfile = async () => {
-            const data = await fetchProfileDetails(id);
-            setProfile(data);
+            try {
+                const response = await userApi.get(`/profiles/${id}`);
+                setProfile(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching profiles:", error);
+                setLoading(false);
+            }
         };
         loadProfile();
     }, [id]);
 
-    const handleChatClick = () => {
-        // Navigeer naar de chat met dit profiel
-        navigate(`/chat/${id}`);
+    // Update veld in de state bij wijzigingen
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setProfile({ ...profile, [name]: value });
     };
 
-    if (!profile) return <div>Loading...</div>;
+    // Verstuur bewerkte gegevens met PATCH
+    const handleSave = async () => {
+        try {
+            await userApi.patch(`/profiles/${id}`, profile);
+            alert("Profiel succesvol bijgewerkt!");
+            navigate(`/profile/${id}`); // Terug naar home of een andere pagina
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("Er is iets misgegaan bij het opslaan van je profiel.");
+        }
+    };
+
+    if (loading || !profile) return <div>Loading...</div>;
 
     return (
         <Grid container spacing={4} justifyContent="center" alignItems="center">
             <Grid size={8}>
                 <Card>
                     <CardContent>
-                        <Typography variant="h4">{profile.name}</Typography>
-                        <Typography variant="body1">{profile.bio}</Typography>
-                        <Button variant="contained" color="primary" onClick={handleChatClick}>
-                            Start Chat
-                        </Button>
+                        <Typography variant="h5">Profiel Bewerken</Typography>
+                        <Grid container spacing={2} marginTop={2}>
+                            <Grid size={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Gebruikersnaam"
+                                    name="userName"
+                                    value={profile.userName || ""}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    fullWidth
+                                    type="number"
+                                    label="Leeftijd"
+                                    name="age"
+                                    value={profile.age || ""}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    fullWidth
+                                    type="number"
+                                    label="Gewicht (kg)"
+                                    name="weight"
+                                    value={profile.weight || ""}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    fullWidth
+                                    type="number"
+                                    label="Lengte (cm)"
+                                    name="height"
+                                    value={profile.height || ""}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    label="Sexualiteit"
+                                    name="sexuality"
+                                    value={profile.sexuality || 0}
+                                    onChange={handleChange}
+                                >
+                                    {sexualityOptions.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    label="Op zoek naar"
+                                    name="lookingFor"
+                                    value={profile.lookingFor || 0}
+                                    onChange={handleChange}
+                                >
+                                    {lookingForOptions.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    label="Relatiestatus"
+                                    name="relationStatus"
+                                    value={profile.relationStatus || 0}
+                                    onChange={handleChange}
+                                >
+                                    {relationStatusOptions.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    fullWidth
+                                    type="number"
+                                    label="Partner ID"
+                                    name="partnerUserId"
+                                    value={profile.partnerUserId || ""}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2} justifyContent="flex-end" marginTop={2}>
+                            <Grid>
+                                <Button variant="contained" color="primary" onClick={handleSave}>
+                                    Opslaan
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </CardContent>
                 </Card>
             </Grid>
@@ -50,3 +189,4 @@ const ProfileView = () => {
 };
 
 export default ProfileView;
+

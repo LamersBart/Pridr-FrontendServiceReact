@@ -1,34 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Card, CardContent, Typography, Button } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import KeycloakService from "../services/Keycloak.js";
-
-// Simuleer API-oproep voor gebruikersprofielen
-const fetchProfiles = async () => {
-    // Hier zou je een API-oproep maken naar de backend
-    return [
-        { id: "1e90c0e1-16d0-459a-8406-7f80c4772eca", name: "Alice", bio: "Loves coding!" },
-        { id: "6d2177d0-5a1e-4c16-bb5f-37653d889742", name: "Bob", bio: "Hiking enthusiast!" },
-    ];
-};
+import {userApi} from "../services/api.js";
+import UserProfileCard from "../components/UserProfileCard.jsx";
 
 const Home = () => {
     const [profiles, setProfiles] = useState([]);
-    const [userId, setUserId] = useState([]); // Verzender ID
-    const navigate = useNavigate();
+    const [userId, setUserId] = useState("");
 
     useEffect(() => {
-        const loadProfiles = async () => {
-            const data = await fetchProfiles();
-            setProfiles(data);
-        };
-        loadProfiles();
         const fetchUserId = async () => {
             try {
                 const userID = KeycloakService.getKeycloakId();
-                setUserId(userID); // Set the token to the state
-                console.log(userID);
+                setUserId(userID);
             } catch (error) {
                 console.error('Failed to fetch Keycloak userId:', error);
             }
@@ -36,27 +20,32 @@ const Home = () => {
         fetchUserId();
     }, []);
 
-    const handleProfileClick = (profileId) => {
-        navigate(`/profile/${profileId}`);
-    };
+    useEffect(() => {
+        const fetchProfiles = async () => {
+            try {
+                const response = await userApi.get("/profiles");
+                setProfiles(response.data);
+            } catch (error) {
+                console.error("Error fetching profiles:", error);
+            }
+        };
+        fetchProfiles();
+    }, [userId]);
 
     return (
         <>
             <Grid container spacing={4} justifyContent="center" alignItems="center">
-                {
-                    profiles
-                        .filter((profile) => profile.id !== userId)
+                <Grid container size={8} justifyContent="center" alignItems="center">
+                    {
+                        profiles
+                        .filter((profile) => profile.keyCloakId !== userId)
                         .map((profile) => (
-                    <Grid size={3} key={profile.id}>
-                        <Card onClick={() => handleProfileClick(profile.id)} style={{ cursor: "pointer" }}>
-                            <CardContent>
-                                <Typography variant="h5">{profile.name}</Typography>
-                                <Typography variant="body2">{profile.bio}</Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    ))
-                }
+                            <Grid size={[12, 6, 3]} key={profile.id}>
+                                <UserProfileCard profile={profile}/>
+                            </Grid>
+                        ))
+                    }
+                </Grid>
             </Grid>
         </>
     );

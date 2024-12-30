@@ -11,6 +11,9 @@ import KeycloakService from "./services/Keycloak.js";
 import './App.css'
 import ProfileView from "./pages/ProfileView.jsx";
 import ChatList from "./pages/ChatList.jsx";
+import EventList from "./pages/EventList.jsx";
+import EventForm from "./pages/EventForm.jsx";
+import EventDetail from "./pages/EventDetail.jsx";
 
 const App = () => (
     <AppTheme>
@@ -52,6 +55,33 @@ const App = () => (
                         KeycloakService.isLoggedIn() ? (
                             <RenderOnAuthenticated>
                                 <ProfileView />
+                            </RenderOnAuthenticated>
+                        ) : (
+                            <Navigate to="/" />
+                        )
+                    }/>
+                    <Route path="/events" element={
+                        KeycloakService.isLoggedIn() ? (
+                            <RenderOnAuthenticated>
+                                <EventList />
+                            </RenderOnAuthenticated>
+                        ) : (
+                            <Navigate to="/" />
+                        )
+                    }/>
+                    <Route path="/event/new" element={
+                        KeycloakService.isLoggedIn() ? (
+                            <RenderOnAuthenticated>
+                                <EventDetail />
+                            </RenderOnAuthenticated>
+                        ) : (
+                            <Navigate to="/" />
+                        )
+                    }/>
+                    <Route path="/event/:id" element={
+                        KeycloakService.isLoggedIn() ? (
+                            <RenderOnAuthenticated>
+                                <EventDetail />
                             </RenderOnAuthenticated>
                         ) : (
                             <Navigate to="/" />

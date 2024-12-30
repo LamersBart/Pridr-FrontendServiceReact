@@ -16,6 +16,7 @@ import {useEffect, useState} from "react";
 import KeycloakService from "../services/Keycloak.js";
 import pridrLogo from '/pridr-E.png'
 import { useNavigate } from "react-router-dom";
+import {userApi} from "../services/api.js";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     display: 'flex',
@@ -36,26 +37,31 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 export default function AppAppBar() {
     const [open, setOpen] = React.useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [myProfile, setMyProfile] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         // Retrieve the token when the component mounts
-        const fetchLoggedInStatus = async () => {
+        const fetchUserData = async () => {
             try {
                 const isLoggedIn = KeycloakService.isLoggedIn();
-                setIsLoggedIn(isLoggedIn); // Set the token to the state
+                setIsLoggedIn(isLoggedIn);
+
+                if (isLoggedIn) {
+                    const keycloakId = KeycloakService.getKeycloakId();
+
+                    const response = await userApi.get(`/profiles/${keycloakId}`);
+                    setMyProfile(response.data);
+                }
             } catch (error) {
                 console.error('Failed to fetch Keycloak token:', error);
             }
         };
-        fetchLoggedInStatus();
+        fetchUserData();
     }, []); // Empty dependency array ensures this effect runs once on mount
+
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
-    };
-    const handleLogoClick = () => {
-        // Navigeer naar de chat met dit profiel
-        navigate("/");
     };
 
     const handleNavigate = (path) => {
@@ -83,7 +89,7 @@ export default function AppAppBar() {
                                 <Button onClick={() => handleNavigate("/")} variant="text" color="info" size="small">
                                     Profiles
                                 </Button>
-                                <Button variant="text" color="info" size="small">
+                                <Button onClick={() => handleNavigate("/events")} variant="text" color="info" size="small">
                                     Events
                                 </Button>
                                 <Button onClick={() => handleNavigate("/chat")} variant="text" color="info" size="small">
@@ -98,6 +104,9 @@ export default function AppAppBar() {
                                 alignItems: 'center',
                             }}
                         >
+                            <Button onClick={() => handleNavigate(`/profile/${myProfile.keyCloakId}`)} color="secondary" variant="contained" size="small">
+                                {myProfile.userName}'s profile
+                            </Button>
                             <Button onClick={() => { KeycloakService.doLogout() }} color="primary" variant="contained" size="small">
                                 Logout
                             </Button>
@@ -130,9 +139,21 @@ export default function AppAppBar() {
                                         </IconButton>
                                     </Box>
 
-                                    <MenuItem>Profiles</MenuItem>
-                                    <MenuItem>Events</MenuItem>
-                                    <MenuItem>Chat</MenuItem>
+                                    <MenuItem>
+                                        <Button onClick={() => handleNavigate("/")} variant="text" color="info" size="small">
+                                            Profiles
+                                        </Button>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Button onClick={() => handleNavigate("/events")} variant="text" color="info" size="small">
+                                            Events
+                                        </Button>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Button onClick={() => handleNavigate("/chat")} variant="text" color="info" size="small">
+                                            Chat
+                                        </Button>
+                                    </MenuItem>
                                     <Divider sx={{ my: 3 }} />
                                     <MenuItem>
                                         <Button onClick={() => { KeycloakService.doLogout() }} color="primary" variant="contained" fullWidth>
