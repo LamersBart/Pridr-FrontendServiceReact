@@ -1,29 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { List, ListItem, ListItemText, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import KeycloakService from "../services/Keycloak.js";
 import Grid from "@mui/material/Grid2";
-import {chatApi, userApi} from "../services/api.js";
+import {chatApi} from "../services/api.js";
 
 const ChatList = () => {
     const [chats, setChats] = useState([]);
-    const [userId, setUserId] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchUserId = async () => {
-            try {
-                const userID = KeycloakService.getKeycloakId();
-                setUserId(userID);
-            } catch (error) {
-                console.error('Failed to fetch Keycloak userId:', error);
-            }
-        };
-        fetchUserId();
-    }, []);
-
-    useEffect(() => {
-        if (!userId) return;
         const fetchChats = async () => {
             try {
                 const response = await chatApi.get("/chatoverview");
@@ -33,7 +18,7 @@ const ChatList = () => {
             }
         };
         fetchChats();
-    }, [userId]);
+    }, []);
 
     const handleChatClick = (id) => {
         navigate(`/chat/${id}`);
@@ -80,11 +65,11 @@ const ChatList = () => {
                             </ListItem>
                         ) : (
                             chats.map((chat) => (
-                                <React.Fragment key={chat.senderId}>
-                                    <ListItem onClick={() => handleChatClick(chat.senderId)}>
+                                <React.Fragment key={chat.partnerId}>
+                                    <ListItem onClick={() => handleChatClick(chat.partnerId)}>
                                         <Grid container alignItems="center" style={{ width: "100%" }}>
                                             <Grid size={4}>
-                                                <ListItemText primary={chat.senderUserName} />
+                                                <ListItemText primary={chat.partnerUserName} />
                                             </Grid>
                                             <Grid size={6}>
                                                 <ListItemText secondary={chat.lastMessage} />

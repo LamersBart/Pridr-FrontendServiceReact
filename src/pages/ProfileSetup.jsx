@@ -1,20 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, TextField, MenuItem, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { userApi } from "../services/api.js";
 import KeycloakService from "../services/Keycloak.js";
 
-const ProfileView = ({ profile }) => {
-    const [profileUpdate, setProfileUpdate] = useState(profile);
-    const [errors, setErrors] = useState({}); // Foutmeldingen
-    const [loading, setLoading] = useState(false); // Laadstatus
-    const navigate = useNavigate();
-
-    // Bijwerken van profielinformatie wanneer het profiel verandert
+const ProfileSetup = ({keycloakId}) => {
+    const [profileId, setProfileId] = useState(keycloakId);
     useEffect(() => {
-        setProfileUpdate(profile);
-    }, [profile]);
+        setProfileId(keycloakId);
+    }, [keycloakId]);
+
+    // State voor profielinformatie
+    const [profile, setProfile] = useState({
+        userName: "",
+        age: "",
+        weight: "",
+        height: "",
+        sexuality: 0,
+        lookingFor: 0,
+        relationStatus: 0,
+    });
+
+    // State voor foutmeldingen
+    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     // Dropdown opties
     const sexualityOptions = [
@@ -40,42 +51,40 @@ const ProfileView = ({ profile }) => {
         { value: 5, label: "Married" },
     ];
 
-    // Velden bijwerken
+    // Handle input wijzigingen
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProfileUpdate({ ...profileUpdate, [name]: value });
+        setProfile({ ...profile, [name]: value });
     };
 
-    // Validatie
+    // Validatiefunctie
     const validate = () => {
         const newErrors = {};
-        if (!profileUpdate.userName?.trim()) newErrors.userName = "Gebruikersnaam is verplicht";
-        if (!profileUpdate.age || profileUpdate.age <= 0) newErrors.age = "Leeftijd moet een positief getal zijn";
-        if (!profileUpdate.weight || profileUpdate.weight <= 0) newErrors.weight = "Gewicht moet een positief getal zijn";
-        if (!profileUpdate.height || profileUpdate.height <= 0) newErrors.height = "Lengte moet een positief getal zijn";
-        if (profileUpdate.sexuality === 0) newErrors.sexuality = "Selecteer je seksualiteit";
-        if (profileUpdate.relationStatus === 0) newErrors.relationStatus = "Selecteer je relatiestatus";
+        if (!profile.userName.trim()) newErrors.userName = "Gebruikersnaam is verplicht";
+        if (!profile.age || profile.age <= 0) newErrors.age = "Leeftijd moet een positief getal zijn";
+        if (!profile.weight || profile.weight <= 0) newErrors.weight = "Gewicht moet een positief getal zijn";
+        if (!profile.height || profile.height <= 0) newErrors.height = "Lengte moet een positief getal zijn";
+        if (profile.sexuality === 0) newErrors.sexuality = "Selecteer je seksualiteit";
+        if (profile.relationStatus === 0) newErrors.relationStatus = "Selecteer je relatiestatus";
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0; // True als er geen fouten zijn
     };
 
-    // Profiel opslaan
+    // Opslaan profiel
     const handleSave = async () => {
         if (!validate()) {
             alert("Vul alle verplichte velden correct in.");
-            return; // Stop als validatie faalt
+            return;
         }
 
         setLoading(true);
         try {
-            await userApi.patch(`/profiles/${profile.keyCloakId}`, profileUpdate);
+            await userApi.patch(`/profiles/${profileId}`, profile);
             alert("Profiel succesvol bijgewerkt!");
-            navigate(0); // Pagina opnieuw laden
+            navigate(0); // Terug naar home of een andere pagina
         } catch (error) {
             console.error("Error updating profile:", error);
             alert("Er is iets misgegaan bij het opslaan van je profiel.");
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -84,7 +93,7 @@ const ProfileView = ({ profile }) => {
             <Grid size={8}>
                 <Card>
                     <CardContent>
-                        <Typography variant="h5">Profiel Bewerken</Typography>
+                        <Typography variant="h5">Welkom! Stel je profiel in:</Typography>
                         <Grid container spacing={2} marginTop={2}>
                             {/* Gebruikersnaam */}
                             <Grid size={6}>
@@ -92,7 +101,7 @@ const ProfileView = ({ profile }) => {
                                     fullWidth
                                     label="Gebruikersnaam"
                                     name="userName"
-                                    value={profileUpdate.userName || ""}
+                                    value={profile.userName}
                                     onChange={handleChange}
                                     error={!!errors.userName}
                                     helperText={errors.userName}
@@ -106,7 +115,7 @@ const ProfileView = ({ profile }) => {
                                     type="number"
                                     label="Leeftijd"
                                     name="age"
-                                    value={profileUpdate.age || ""}
+                                    value={profile.age}
                                     onChange={handleChange}
                                     error={!!errors.age}
                                     helperText={errors.age}
@@ -120,7 +129,7 @@ const ProfileView = ({ profile }) => {
                                     type="number"
                                     label="Gewicht (kg)"
                                     name="weight"
-                                    value={profileUpdate.weight || ""}
+                                    value={profile.weight}
                                     onChange={handleChange}
                                     error={!!errors.weight}
                                     helperText={errors.weight}
@@ -134,7 +143,7 @@ const ProfileView = ({ profile }) => {
                                     type="number"
                                     label="Lengte (cm)"
                                     name="height"
-                                    value={profileUpdate.height || ""}
+                                    value={profile.height}
                                     onChange={handleChange}
                                     error={!!errors.height}
                                     helperText={errors.height}
@@ -148,7 +157,7 @@ const ProfileView = ({ profile }) => {
                                     fullWidth
                                     label="Sexualiteit"
                                     name="sexuality"
-                                    value={profileUpdate.sexuality || 0}
+                                    value={profile.sexuality}
                                     onChange={handleChange}
                                     error={!!errors.sexuality}
                                     helperText={errors.sexuality}
@@ -168,7 +177,7 @@ const ProfileView = ({ profile }) => {
                                     fullWidth
                                     label="Op zoek naar"
                                     name="lookingFor"
-                                    value={profileUpdate.lookingFor}
+                                    value={profile.lookingFor}
                                     onChange={handleChange}
                                     error={!!errors.lookingFor}
                                     helperText={errors.lookingFor}
@@ -188,7 +197,7 @@ const ProfileView = ({ profile }) => {
                                     fullWidth
                                     label="Relatiestatus"
                                     name="relationStatus"
-                                    value={profileUpdate.relationStatus || 0}
+                                    value={profile.relationStatus}
                                     onChange={handleChange}
                                     error={!!errors.relationStatus}
                                     helperText={errors.relationStatus}
@@ -223,4 +232,4 @@ const ProfileView = ({ profile }) => {
     );
 };
 
-export default ProfileView;
+export default ProfileSetup;

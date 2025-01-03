@@ -35,6 +35,8 @@ const doLogin = _kc.login;
 
 const doLogout = _kc.logout;
 
+const doManagement = () => _kc.accountManagement();
+
 const getToken = () => _kc.token;
 
 const getTokenParsed = () => _kc.tokenParsed;
@@ -56,6 +58,7 @@ const KeycloakService = {
     initKeycloak,
     doLogin,
     doLogout,
+    doManagement,
     isLoggedIn,
     getToken,
     getTokenParsed,

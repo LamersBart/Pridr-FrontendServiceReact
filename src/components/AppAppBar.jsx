@@ -12,11 +12,9 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown.jsx';
-import {useEffect, useState} from "react";
 import KeycloakService from "../services/Keycloak.js";
 import pridrLogo from '/pridr-E.png'
 import { useNavigate } from "react-router-dom";
-import {userApi} from "../services/api.js";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     display: 'flex',
@@ -34,31 +32,9 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     padding: '8px 12px',
 }));
 
-export default function AppAppBar() {
+export default function AppAppBar({ profile, isLoggedIn }) {
     const [open, setOpen] = React.useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [myProfile, setMyProfile] = useState([]);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        // Retrieve the token when the component mounts
-        const fetchUserData = async () => {
-            try {
-                const isLoggedIn = KeycloakService.isLoggedIn();
-                setIsLoggedIn(isLoggedIn);
-
-                if (isLoggedIn) {
-                    const keycloakId = KeycloakService.getKeycloakId();
-
-                    const response = await userApi.get(`/profiles/${keycloakId}`);
-                    setMyProfile(response.data);
-                }
-            } catch (error) {
-                console.error('Failed to fetch Keycloak token:', error);
-            }
-        };
-        fetchUserData();
-    }, []); // Empty dependency array ensures this effect runs once on mount
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -68,7 +44,8 @@ export default function AppAppBar() {
         // Navigeer naar de chat met dit profiel
         navigate(path);
     };
-    if(isLoggedIn){
+
+    if(isLoggedIn) {
         return (
             <AppBar
                 position="fixed"
@@ -104,8 +81,10 @@ export default function AppAppBar() {
                                 alignItems: 'center',
                             }}
                         >
-                            <Button onClick={() => handleNavigate(`/profile/${myProfile.keyCloakId}`)} color="secondary" variant="contained" size="small">
-                                {myProfile.userName}'s profile
+                            <Button onClick={() => handleNavigate(`/profile`)} color="secondary" variant="contained" size="small">
+                                {
+                                    profile.userName === null ? "Welcome" : profile.userName + "'s profile"
+                                }
                             </Button>
                             <Button onClick={() => { KeycloakService.doLogout() }} color="primary" variant="contained" size="small">
                                 Logout

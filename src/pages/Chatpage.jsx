@@ -102,8 +102,8 @@ const Chat = () => {
     const sendMessage = async () => {
         if (conn && targetUserId && message && myProfile) {
             const now = new Date().toISOString(); // Voeg de huidige tijd toe
-            await conn.invoke("SendDirectMessage", targetUserId, targetProfile.userName, myProfile.userName, message);
-            setMessages(prev => [...prev, { userId: userId, targetUserName: targetProfile.userName, senderUserName: myProfile.userName, msg: message, timestamp: now }]);
+            await conn.invoke("SendDirectMessage", targetUserId, message);
+            setMessages(prev => [...prev, { userId: userId, msg: message, timestamp: now }]);
             setMessage(""); // Clear input
         } else {
             alert("Fill in Target User ID and Message!");
@@ -141,9 +141,9 @@ const Chat = () => {
     }, [messages]);
 
     const handleKeyPress = (event) => {
-        if (event.key === "Enter" && !event.shiftKey) { // Check of Enter is ingedrukt en Shift niet is ingedrukt
-            event.preventDefault(); // Voorkom het toevoegen van een nieuwe regel in de input
-            sendMessage(); // Roep de bestaande sendMessage functie aan
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
         }
     };
 
