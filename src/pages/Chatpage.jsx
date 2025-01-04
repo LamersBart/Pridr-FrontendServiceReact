@@ -31,7 +31,7 @@ const Chat = () => {
 
                 // Bouw verbinding op
                 const connection = new HubConnectionBuilder()
-                    .withUrl(import.meta.env.VITE_CHAT_SERVICE_HUB_URL, {
+                    .withUrl(window._env_.VITE_CHAT_SERVICE_HUB_URL, {
                         accessTokenFactory: () => fetchedToken,
                     })
                     .configureLogging(LogLevel.Warning)

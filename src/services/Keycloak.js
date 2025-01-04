@@ -1,9 +1,9 @@
 import Keycloak from 'keycloak-js';
 
 const _kc = new Keycloak({
-    url: import.meta.env.VITE_KEYCLOAK_URL,
-    clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
-    realm: import.meta.env.VITE_KEYCLOAK_REALM,
+    url: window._env_.VITE_KEYCLOAK_URL,
+    clientId: window._env_.VITE_KEYCLOAK_CLIENT_ID,
+    realm: window._env_.VITE_KEYCLOAK_REALM,
 });
 
 /**
