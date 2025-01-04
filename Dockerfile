@@ -2,7 +2,7 @@
 FROM node:lts-alpine AS build-stage
 WORKDIR /app
 # Kopieer package files
-COPY package.json package-lock.json vite.config.js index.html .env ./
+COPY package.json package-lock.json vite.config.js index.html ./
 # Kopieer bronbestanden
 COPY src ./src
 COPY public ./public
