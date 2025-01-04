@@ -1,13 +1,122 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Basisstijl */
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100%; /* Hele viewport hoogte */
+    scroll-behavior: smooth; /* Soepel scrollen */
+    font-family: Arial, sans-serif;
 }
 
+/* Zorgt ervoor dat het hele scherm gevuld wordt */
+#app {
+    display: flex;
+    flex-direction: column; /* Stapel elementen onder elkaar */
+    height: 100vh; /* 100% van de viewport hoogte */
+}
+
+/* Header en footer vaste hoogte */
+header {
+    flex: 0 0 10vh; /* Vaste hoogte 10% van de viewport */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+/* Footer vaste hoogte */
+footer {
+    flex: 0 0 10vh; /* Vaste hoogte 10% van de viewport */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Main vult alle beschikbare ruimte */
+main {
+    flex: 1; /* Neemt resterende ruimte in beslag */
+    overflow-y: auto; /* Maakt inhoud scrollbaar */
+    padding: 1em;
+}
+
+/* Optionele container voor gecentreerde inhoud */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1em;
+}
+
+/* Zorg voor een flexibele layout die volledig werkt */
+.chat-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Hele viewport hoogte */
+    width: 100%;
+    padding: 0 1rem;
+}
+
+/* Container voor de chat */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 800px; /* Maximale breedte */
+    height: 100%; /* 90% van de viewport hoogte */
+}
+
+/* Header vast bovenaan */
+.chat-header {
+    flex: 0 0 60px; /* Geen groei, vaste hoogte */
+    padding: 10px;
+    text-align: center;
+    z-index: 1;
+}
+
+/* Berichten scrollbaar */
+.chat-messages {
+    flex: 1 1 auto; /* Flexibel, neemt beschikbare ruimte */
+    overflow-y: auto; /* Scrollbaar maken */
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Vast invoerveld onderaan */
+.chat-input {
+    flex: 0 0 60px; /* Geen groei, vaste hoogte */
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.event-container {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.event-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.event-detail {
+    padding: 2rem;
+    background: #f4f4f4;
+    border-radius: 8px;
+}
+
+
+
+h1 {
+    font-size: 5em;
+    line-height: 1.1;
+}
 .logo {
-  height: 6em;
-  padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
