@@ -37,6 +37,6 @@ const createApiInstance = (baseURL) => {
     return api;
 };
 
-export const userApi = createApiInstance(import.meta.env.VITE_USER_SERVICE_URL);
-export const eventApi = createApiInstance(import.meta.env.VITE_EVENT_SERVICE_URL);
-export const chatApi = createApiInstance(import.meta.env.VITE_CHAT_SERVICE_URL);
+export const userApi = createApiInstance(window._env_.VITE_USER_SERVICE_URL);
+export const eventApi = createApiInstance(window._env_.VITE_EVENT_SERVICE_URL);
+export const chatApi = createApiInstance(window._env_.VITE_CHAT_SERVICE_URL);
