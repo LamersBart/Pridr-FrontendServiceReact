@@ -14,13 +14,24 @@ RUN ls -l /app
 
 # Production stage
 FROM nginx:stable-alpine AS production-stage
-# Maak een niet-root gebruiker
+
+# Create non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-# Kopieer de build-output naar de nginx-html-map
+
+# Create required directories with correct permissions
+RUN mkdir -p /var/cache/nginx/client_temp && \
+    chmod -R 775 /var/cache/nginx && \
+    chown -R appuser:appgroup /var/cache/nginx && \
+    chown -R appuser:appgroup /etc/nginx/conf.d
+
+# Copy the build output to nginx-html directory
 COPY --from=build-stage /app/dist /usr/share/nginx/html
-# Stel de gebruiker in als niet-root gebruiker
+
+# Set the user as non-root
 USER appuser
-# Stel poort in
+
+# Expose the port
 EXPOSE 80
-# Start Nginx
+
+# Start NGINX
 CMD ["nginx", "-g", "daemon off;"]
