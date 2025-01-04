@@ -1,0 +1,62 @@
+name: Main Flow
+on:
+  [workflow_dispatch]
+jobs:
+  scan:
+    name: SonarQube scan
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
+  qualitiy:
+    name: qualitiy gate check
+    needs: scan 
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Quality Gate Check
+        run: |
+          RESPONSE=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: \
+          "https://sonarcloud.io/api/qualitygates/project_status?projectKey=LamersBart_Pridr-FrontendServiceReact")
+          echo "SonarCloud API Response: $RESPONSE"
+          STATUS=$(echo $RESPONSE | jq -r .projectStatus.status)
+          echo "Quality Gate Status: $STATUS"
+          if [ "$STATUS" != "OK" ]; then
+              echo "Quality Gate failed!"
+              exit 1
+          fi
+
+  build:
+    name: build and push docker image
+    needs: [scan, qualitiy]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set dynamic TAG variable
+        id: set_tag
+        run: echo "TAG=$(date +%s)" >> $GITHUB_ENV
+        
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        
+      - name: Create .env
+        run: |
+          mkdir -p ./
+          printf 'VITE_KEYCLOAK_URL="${{ secrets.ENV_URL }}"
+          VITE_KEYCLOAK_CLIENT_ID="${{ secrets.ENV_CLIENTID }}"
+          VITE_KEYCLOAK_REALM="${{ secrets.ENV_REALM }}"' > ./.env
+          
+      - name: Verify .env
+        run: cat ./.env
+
+      - name: Build the Docker image
+        run: docker build ./ --file ./Dockerfile -t lamersbart/pridr-frontend:$TAG
+
+      - name: push image to hub
+        run: docker push lamersbart/pridr-frontend:$TAG
