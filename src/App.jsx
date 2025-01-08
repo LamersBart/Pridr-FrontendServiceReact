@@ -2,10 +2,8 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Home from "./pages/Homepage";
 import Landing from "./pages/Landingpage";
 import Chat from "./pages/Chatpage";
-import RenderOnAnonymous from "./components/RenderOnAnonymous.jsx";
-import RenderOnAuthenticated from "./components/RenderOnAuthenticated.jsx";
 import Layout from "./components/Layout.jsx";
-import {CircularProgress, CssBaseline} from "@mui/material";
+import {CssBaseline} from "@mui/material";
 import AppTheme from "./shared-theme/AppTheme.jsx";
 import KeycloakService from "./services/Keycloak.js";
 import './App.css'
@@ -55,105 +53,76 @@ const App = () => {
 
     // Laadscherm tijdens controle
     if (loading) {
-        return(
+        return (
             <AppTheme>
-                <CssBaseline enableColorScheme />
-                <LoadingPage />
+                <CssBaseline enableColorScheme/>
+                <LoadingPage/>
             </AppTheme>
         );
     }
 
     return (
         <AppTheme>
-        <CssBaseline enableColorScheme />
-        <BrowserRouter>
-            <Layout profile={profile} isLoggedIn={isLoggedIn} >
-                <Routes>
-                    {/* Root Route */}
-                    <Route path="/" element={
-                        isLoggedIn ? (
-                            <RenderOnAuthenticated>
-                                { isProfileComplete ? <Home profile={profile} /> : <Navigate to="/profile-setup" /> }
-                            </RenderOnAuthenticated>
-                        ) : (
-                            <RenderOnAnonymous>
-                                <Landing />
-                            </RenderOnAnonymous>
-                        )
-                    }/>
-                    {/* Profiel Setup Route */}
-                    <Route
-                        path="/profile-setup"
-                        element={
-                            isLoggedIn ? (
-                                <RenderOnAuthenticated>
-                                    <ProfileSetup keycloakId={profile.keyCloakId} />
-                                </RenderOnAuthenticated>
-                            ) : (
-                                <Navigate to="/" />
-                            )
-                        }
-                    />
-                    <Route path="/chat" element={
-                        isLoggedIn ? (
-                            <RenderOnAuthenticated>
-                                { isProfileComplete ? <ChatList profile={profile} /> : <Navigate to="/profile-setup" /> }
-                            </RenderOnAuthenticated>
-                        ) : (
-                            <Navigate to="/" />
-                        )
-                    }/>
-                    <Route path="/chat/:targetUserId" element={
-                        isLoggedIn ? (
-                            <RenderOnAuthenticated>
-                                <Chat profile={profile} />
-                            </RenderOnAuthenticated>
-                        ) : (
-                            <Navigate to="/" />
-                        )
-                    }/>
-                    <Route path="/profile" element={
-                        isLoggedIn ? (
-                            <RenderOnAuthenticated>
-                                { isProfileComplete ? <ProfileView profile={profile} /> : <Navigate to="/profile-setup" /> }
-                            </RenderOnAuthenticated>
-                        ) : (
-                            <Navigate to="/" />
-                        )
-                    }/>
-                    <Route path="/events" element={
-                        isLoggedIn ? (
-                            <RenderOnAuthenticated>
-                                { isProfileComplete ? <EventList /> : <Navigate to="/profile-setup" /> }
-                            </RenderOnAuthenticated>
-                        ) : (
-                            <Navigate to="/" />
-                        )
-                    }/>
-                    <Route path="/event/new" element={
-                        isLoggedIn ? (
-                            <RenderOnAuthenticated>
-                                <EventDetail />
-                            </RenderOnAuthenticated>
-                        ) : (
-                            <Navigate to="/" />
-                        )
-                    }/>
-                    <Route path="/event/:id" element={
-                        isLoggedIn ? (
-                            <RenderOnAuthenticated>
-                                <EventDetail />
-                            </RenderOnAuthenticated>
-                        ) : (
-                            <Navigate to="/" />
-                        )
-                    }/>
-                    {/* Fallback route */}
-                    <Route path="*" element={<h1>404 - Not Found</h1>} />
-                </Routes>
-            </Layout>
-        </BrowserRouter>
-    </AppTheme>
+            <CssBaseline enableColorScheme/>
+            <BrowserRouter>
+                <Layout profile={profile} isLoggedIn={isLoggedIn}>
+                    <Routes>
+                        {/* Root Route */}
+                        <Route path="/" element={
+                            isLoggedIn ?
+                                isProfileComplete ? <Home profile={profile}/> : <Navigate to="/profile-setup"/>
+                                :
+                                <Landing/>
+                        }/>
+                        {/* Profiel Setup Route */}
+                        <Route path="/profile-setup" element={
+                            isLoggedIn ?
+                                <ProfileSetup keycloakId={profile.keyCloakId}/>
+                                :
+                                <Navigate to="/"/>
+                        }/>
+                        <Route path="/chat" element={
+                            isLoggedIn ?
+                                isProfileComplete ? <ChatList profile={profile}/> : <Navigate to="/profile-setup"/>
+                                :
+                                <Navigate to="/"/>
+                        }/>
+                        <Route path="/chat/:targetUserId" element={
+                            isLoggedIn ?
+                                <Chat profile={profile}/>
+                                :
+                                <Navigate to="/"/>
+                        }/>
+                        <Route path="/profile" element={
+                            isLoggedIn ?
+                                isProfileComplete ? <ProfileView profile={profile}/> : <Navigate to="/profile-setup"/>
+                                :
+                                <Navigate to="/"/>
+                        }/>
+                        <Route path="/events" element={
+                            isLoggedIn ?
+                                isProfileComplete ? <EventList/> : <Navigate to="/profile-setup"/>
+                                :
+                                <Navigate to="/"/>
+                        }/>
+                        <Route path="/event/new" element={
+                            isLoggedIn ?
+                                <EventDetail/>
+                                :
+                                <Navigate to="/"/>
+                        }/>
+                        <Route path="/event/:id" element={
+                            isLoggedIn ?
+                                <EventDetail/>
+                                :
+                                <Navigate to="/"/>
+                        }/>
+                        {/* Fallback route */}
+                        <Route path="*" element={<h1>404 - Not Found</h1>}/>
+                    </Routes>
+                </Layout>
+            </BrowserRouter>
+        </AppTheme>
     );
 };
 
