@@ -77,7 +77,7 @@ const App = () => {
                         {/* Profiel Setup Route */}
                         <Route path="/profile-setup" element={
                             isLoggedIn ?
-                                <ProfileSetup keycloakId={profile.keyCloakId}/>
+                                <ProfileSetup keycloakId={profile.keyCloakId} onProfileComplete={() => setIsProfileComplete(true)}/>
                                 :
                                 <Navigate to="/"/>
                         }/>

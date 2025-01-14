@@ -11,6 +11,7 @@ const Home = ({ profile }) => {
             try {
                 const response = await userApi.get("/profiles");
                 setProfiles(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching profiles:", error);
             }
@@ -24,10 +25,10 @@ const Home = ({ profile }) => {
                 <Grid container size={8} justifyContent="center" alignItems="center">
                     {
                         profiles.map((profileFromList) => (
-                            profileFromList.id === profile.id ? null :
-                            <Grid size={[12, 6, 3]} key={profileFromList.id}>
-                                <UserProfileCard profile={profileFromList}/>
-                            </Grid>
+                            profileFromList.id === profile.id || profileFromList.userName === null || profileFromList.userName === "null" ? null :
+                                <Grid size={[12, 6, 3]} key={profileFromList.id}>
+                                    <UserProfileCard profile={profileFromList}/>
+                                </Grid>
                         ))
                     }
                 </Grid>

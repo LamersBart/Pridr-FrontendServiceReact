@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid2";
 import { userApi } from "../services/api.js";
 import KeycloakService from "../services/Keycloak.js";
 
-const ProfileSetup = ({keycloakId}) => {
+const ProfileSetup = ({keycloakId, onProfileComplete}) => {
     const [profileId, setProfileId] = useState(keycloakId);
     useEffect(() => {
         setProfileId(keycloakId);
@@ -81,7 +81,8 @@ const ProfileSetup = ({keycloakId}) => {
         try {
             await userApi.patch(`/profiles/${profileId}`, profile);
             alert("Profiel succesvol bijgewerkt!");
-            navigate(0); // Terug naar home of een andere pagina
+            onProfileComplete();
+            navigate("/");
         } catch (error) {
             console.error("Error updating profile:", error);
             alert("Er is iets misgegaan bij het opslaan van je profiel.");
