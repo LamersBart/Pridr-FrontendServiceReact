@@ -11,7 +11,6 @@ const Home = ({ profile }) => {
             try {
                 const response = await userApi.get("/profiles");
                 setProfiles(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching profiles:", error);
             }
