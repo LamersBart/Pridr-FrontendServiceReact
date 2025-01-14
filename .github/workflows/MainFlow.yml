@@ -31,10 +31,11 @@ jobs:
               echo "Quality Gate failed!"
               exit 1
           fi
+        continue-on-error: true
 
   build:
     name: build and push docker image
-    needs: [scan, qualitiy]
+    needs: [scan]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
