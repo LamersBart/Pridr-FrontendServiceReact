@@ -25,7 +25,8 @@ const Home = ({ profile }) => {
                 <Grid container size={8} justifyContent="center" alignItems="center">
                     {
                         profiles.map((profileFromList) => (
-                            profileFromList.id === profile.id || profileFromList.userName === null || profileFromList.userName === "null" ? null :
+                            profileFromList.id === profile.id ? null :
+                                profileFromList.userName === null || profileFromList.userName === "null" ? null :
                                 <Grid size={[12, 6, 3]} key={profileFromList.id}>
                                     <UserProfileCard profile={profileFromList}/>
                                 </Grid>
