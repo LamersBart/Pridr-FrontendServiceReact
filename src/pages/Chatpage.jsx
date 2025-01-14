@@ -4,7 +4,6 @@ import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import KeycloakService from "../services/Keycloak";
 import { Box, TextField, Button, Typography, Paper } from "@mui/material";
 import {userApi} from "../services/api.js";
-import Grid from "@mui/material/Grid2";
 
 const Chat = () => {
     const { targetUserId } = useParams();
@@ -40,7 +39,9 @@ const Chat = () => {
                 // Ontvang berichten
                 connection.on("ReceiveDirectMessage", (userId, msg, timestamp) => {
                     // console.log(`Message from ${userId}: ${msg}`);
-                    setMessages(prev => [...prev, { userId, msg, timestamp }]);
+                    if(userId === fetchedUserId || userId === targetUserId) {
+                        setMessages(prev => [...prev, { userId, msg, timestamp }]);
+                    }
                 });
 
                 connection.on("MessageDelivered", (targetUserId, msg) => {
